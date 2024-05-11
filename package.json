@@ -8,6 +8,9 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "prettier": {
+    "singleQuote": true
+  },
   "dependencies": {
     "react": "^18",
     "react-dom": "^18",
