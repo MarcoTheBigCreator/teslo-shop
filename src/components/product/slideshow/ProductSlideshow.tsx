@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 
 import { Swiper as SwiperObject } from 'swiper';
@@ -13,7 +14,6 @@ import 'swiper/css/thumbs';
 
 import './slideshow.css';
 import React from 'react';
-import Image from 'next/image';
 
 interface Props {
   images: string[];
@@ -49,7 +49,7 @@ export const ProductSlideshow = ({ images, title, className }: Props) => {
               width={1024}
               height={800}
               alt={title}
-              className="rounded-lg object-fill"
+              className="rounded-lg object-fill pb-3"
             />
           </SwiperSlide>
         ))}
