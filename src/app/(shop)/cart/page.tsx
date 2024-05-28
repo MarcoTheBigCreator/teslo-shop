@@ -1,7 +1,6 @@
 import Link from 'next/link';
 
 import Image from 'next/image';
-import { redirect } from 'next/navigation';
 
 import { QuantitySelector, Title } from '@/components';
 import { initialData } from '@/seed/seed';
@@ -68,8 +67,10 @@ export default function () {
               <span>Impuestos (15%)</span>
               <span className="text-right">$ 100</span>
 
-              <span className="mt-5 text-2xl">Total:</span>
-              <span className="mt-5 text-2xl text-right">$ 100</span>
+              <span className="mt-5 text-2xl font-semibold">Total:</span>
+              <span className="mt-5 text-2xl text-right font-semibold">
+                $ 100
+              </span>
             </div>
 
             <div className="mt-5 mb-2 w-full">
