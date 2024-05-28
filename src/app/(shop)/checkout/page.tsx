@@ -85,13 +85,26 @@ export default function () {
               </span>
             </div>
 
-            <div className="mt-5 mb-2 w-full">
+            <div className="mt-6 w-full text-center">
               <Link
                 className="flex btn-primary justify-center"
                 href="/orders/123"
               >
                 Colocar orden
               </Link>
+              <p className="mt-5">
+                {/* Disclaimer */}
+                <span className="text-xs">
+                  Al hacer clic en "Colocar orden", aceptas nuestros{' '}
+                  <a href="#" className="underline">
+                    términos y condiciones
+                  </a>{' '}
+                  y{' '}
+                  <a href="#" className="underline">
+                    política de privacidad
+                  </a>
+                </span>
+              </p>
             </div>
           </div>
         </div>
