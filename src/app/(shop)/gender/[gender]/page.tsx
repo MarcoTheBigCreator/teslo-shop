@@ -13,10 +13,7 @@ interface Props {
   };
 }
 
-export default async function ProductGridFiltered({
-  params,
-  searchParams,
-}: Props) {
+export default async function GenderByPage({ params, searchParams }: Props) {
   const { gender } = params;
 
   const page = searchParams.page ? parseInt(searchParams.page) : 1;
