@@ -6,10 +6,10 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { IoChevronBackOutline, IoChevronForwardOutline } from 'react-icons/io5';
 
 interface Props {
-  totaPages: number;
+  totalPages: number;
 }
 
-export const Pagination = ({ totaPages }: Props) => {
+export const Pagination = ({ totalPages }: Props) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -17,7 +17,7 @@ export const Pagination = ({ totaPages }: Props) => {
 
   const currentPage = isNaN(+pageString) ? 1 : +pageString;
 
-  const allPages = generatePaginationNumbers(currentPage, totaPages);
+  const allPages = generatePaginationNumbers(currentPage, totalPages);
 
   const createPageUrl = (pageNumber: number | string) => {
     const params = new URLSearchParams(searchParams);
@@ -30,7 +30,7 @@ export const Pagination = ({ totaPages }: Props) => {
       return `${pathname}`;
     }
 
-    if (+pageNumber > totaPages) {
+    if (+pageNumber > totalPages) {
       return `${pathname}?${params.toString()}`;
     }
 
