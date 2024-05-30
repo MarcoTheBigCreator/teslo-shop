@@ -22,12 +22,12 @@ export default async function Home({ searchParams }: Props) {
   }
 
   return (
-    <>
+    <div className="px-5 sm:px-0">
       <Title title="Tienda" subtitle="Todos los productos" className="mb-2" />
 
       <ProductGrid products={products} />
 
       <Pagination totalPages={totalPages} />
-    </>
+    </div>
   );
 }
