@@ -1,3 +1,6 @@
+export const revalidate = 1080;
+
+import { getProductBySlug } from '@/actions';
 import {
   ProductSlideshow,
   ProductSlideshowMobile,
@@ -5,7 +8,6 @@ import {
   SizeSelector,
 } from '@/components';
 import { titleFont } from '@/config/fonts';
-import { initialData } from '@/seed/seed';
 import { notFound } from 'next/navigation';
 
 interface Props {
@@ -13,9 +15,9 @@ interface Props {
     slug: string;
   };
 }
-export default function ProductBySlug({ params }: Props) {
+export default async function ProductBySlug({ params }: Props) {
   const { slug } = params;
-  const product = initialData.products.find((product) => product.slug === slug);
+  const product = await getProductBySlug(slug);
 
   if (!product) {
     notFound();
