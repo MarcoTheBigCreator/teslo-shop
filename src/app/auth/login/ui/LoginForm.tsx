@@ -3,20 +3,21 @@
 import { useEffect } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 import { authenticate } from '@/actions';
 import { IoInformationOutline } from 'react-icons/io5';
 import clsx from 'clsx';
+import { useSearchParams } from 'next/navigation';
 
 export const LoginForm = () => {
   const [state, dispatch] = useFormState(authenticate, undefined);
 
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('redirectTo') || '/';
+  console.log(callbackUrl);
+
   useEffect(() => {
-    if (state === 'Success') {
-      // redirect
-      window.location.replace('/');
-    }
-  }, [state]);
+    if (state === 'Success') window.location.replace(callbackUrl);
+  }, [state, callbackUrl]);
 
   return (
     <form action={dispatch} className="flex flex-col">
