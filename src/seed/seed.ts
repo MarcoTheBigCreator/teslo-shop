@@ -41,7 +41,7 @@ export const initialData: SeedData = {
       email: 'ojavio@gmail.com',
       password: bycriptjs.hashSync('123456'),
       name: 'Ojavio Mesías',
-      role: 'admin',
+      role: 'user',
     },
   ],
   categories: ['Shirts', 'Pants', 'Hoodies', 'Hats'],
