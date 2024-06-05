@@ -11,8 +11,8 @@ import {
   IoTicketOutline,
 } from 'react-icons/io5';
 import clsx from 'clsx';
-import { logout } from '@/actions';
-import { useSession } from 'next-auth/react';
+// import { logout } from '@/actions';
+import { signOut, useSession } from 'next-auth/react';
 import { AdminItems } from './AdminItems';
 
 export const Sidebar = () => {
@@ -23,12 +23,9 @@ export const Sidebar = () => {
   const isAuthenticated = !!session?.user;
   const isAdmin = session?.user.role === 'admin';
 
-  const refresh = () => {
-    window.location.replace('/');
-
+  const onLogout = () => {
+    signOut({ redirect: false });
     closeMenu();
-
-    logout();
   };
 
   return (
@@ -91,7 +88,7 @@ export const Sidebar = () => {
         {isAuthenticated && (
           <button
             className="flex w-full items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all"
-            onClick={() => refresh()}
+            onClick={() => onLogout()}
           >
             <IoLogOutOutline size={30} />
             <span className="ml-3 text-xl">Salir</span>
