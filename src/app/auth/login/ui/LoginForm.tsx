@@ -13,7 +13,6 @@ export const LoginForm = () => {
 
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('redirectTo') || '/';
-  console.log(callbackUrl);
 
   useEffect(() => {
     if (state === 'Success') window.location.replace(callbackUrl);

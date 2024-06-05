@@ -11,7 +11,7 @@ export const authConfig: NextAuthConfig = {
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
-      console.log({ auth });
+      // console.log({ auth });
       // const isLoggedIn = !!auth?.user;
       // const isOnDashboard = nextUrl.pathname.startsWith('/dashboard');
       // if (isOnDashboard) {
@@ -30,7 +30,7 @@ export const authConfig: NextAuthConfig = {
     },
     session({ session, token, user }) {
       session.user = token.data as any;
-      console.log({ session, token, user });
+      // console.log({ session, token, user });
       return session;
     },
   },

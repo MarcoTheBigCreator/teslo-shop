@@ -4,6 +4,10 @@ import prisma from '../lib/prisma';
 
 async function main() {
   // 1. Erase previous data
+
+  await prisma.orderAddress.deleteMany();
+  await prisma.orderItem.deleteMany();
+  await prisma.order.deleteMany();
   await prisma.userAddress.deleteMany();
   await prisma.user.deleteMany();
   await prisma.country.deleteMany();
