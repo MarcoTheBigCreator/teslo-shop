@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import type { Country } from '@/interfaces';
 import { useAddressStore } from '@/store';
 import { useEffect } from 'react';
-import { setUserAddress } from '@/actions';
+import { deleteUserAddress, setUserAddress } from '@/actions';
 import { useSession } from 'next-auth/react';
 
 interface FormInputs {
@@ -56,7 +56,7 @@ export const AddressForm = ({ countries }: Props) => {
     if (data.rememberAddress) {
       setUserAddress(restAddress, session!.user.id);
     } else {
-      // TODO SERVER ACTIOn
+      deleteUserAddress(session!.user.id);
     }
   };
 
