@@ -16,7 +16,7 @@ interface Props {
 export default async function OrdersByIdPage({ params }: Props) {
   const { id } = params;
 
-  //TODO: VERIFICAR ORDEN
+  //! VERIFICAR ORDEN
 
   const { ok, order } = await getOrderById(id);
 
