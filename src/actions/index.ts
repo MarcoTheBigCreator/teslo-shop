@@ -14,6 +14,7 @@ export * from './order/order-pagination';
 export * from './order/place-order';
 
 export * from './payment/set-transaction-id';
+export * from './payment/paypal-check-payment';
 
 export * from './product/get-product-by-slug';
 export * from './product/get-stock-by-slug';
