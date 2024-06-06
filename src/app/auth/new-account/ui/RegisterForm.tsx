@@ -68,7 +68,9 @@ export const RegisterForm = () => {
 
       <span className="text-red-500 text-sm mb-3">{errorMessage}</span>
 
-      <button className="btn-primary">Crear cuenta</button>
+      <button type="submit" className="btn-primary">
+        Crear cuenta
+      </button>
 
       {/* divisor l ine */}
       <div className="flex items-center my-5">
