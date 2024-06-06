@@ -1,10 +1,9 @@
 'use server';
 
 export const paypalCheckPayment = async (paypalTransactionId: string) => {
-  const authToken = getPaypalBearerToken();
+  const authToken = await getPaypalBearerToken();
 
   console.log({ authToken });
-
   if (!authToken) {
     return {
       ok: false,
