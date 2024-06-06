@@ -13,6 +13,7 @@
     "singleQuote": true
   },
   "dependencies": {
+    "@paypal/react-paypal-js": "^8.3.0",
     "@prisma/client": "^5.14.0",
     "bcryptjs": "^2.4.3",
     "clsx": "^2.1.1",

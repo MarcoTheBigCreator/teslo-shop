@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
 
-import { Title } from '@/components';
+import { PayPalButton, Title } from '@/components';
 import clsx from 'clsx';
 import { IoCartOutline } from 'react-icons/io5';
 import { getOrderById } from '@/actions';
@@ -118,21 +118,8 @@ export default async function OrdersByIdPage({ params }: Props) {
               </span>
             </div>
 
-            <div className="mt-6 w-full text-center">
-              <div
-                className={clsx(
-                  'flex items-center rounded-lg py-2 px-3.5 text-xs font-bold text-white mb-5',
-                  {
-                    'bg-red-500': !order!.isPaid,
-                    'bg-green-700': order!.isPaid,
-                  }
-                )}
-              >
-                <IoCartOutline size={30} />
-                <span className="mx-2">{`${
-                  order!.isPaid ? 'Pagada' : 'No pagada'
-                }`}</span>
-              </div>
+            <div className="mt-10 w-full">
+              <PayPalButton />
             </div>
           </div>
         </div>

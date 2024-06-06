@@ -7,7 +7,7 @@ export * from './address/set-user-address';
 export * from './auth/login';
 export * from './auth/register';
 
-export * from './country/getCountries';
+export * from './country/get-countries';
 
 export * from './order/get-order-by-id';
 export * from './order/order-pagination';
