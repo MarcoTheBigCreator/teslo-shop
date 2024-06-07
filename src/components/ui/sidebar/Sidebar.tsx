@@ -24,7 +24,7 @@ export const Sidebar = () => {
   const isAdmin = session?.user.role === 'admin';
 
   const onLogout = () => {
-    signOut({ redirect: false });
+    signOut({ redirect: true });
     closeMenu();
   };
 
