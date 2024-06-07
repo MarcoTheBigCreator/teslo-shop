@@ -27,7 +27,7 @@ export default async function OrdersPage({ searchParams }: Props) {
 
   return (
     <>
-      <Title title="All Orders" />
+      <Title title="Todas las órdenes" />
 
       <div className="mb-10">
         <table className="min-w-full">

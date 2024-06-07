@@ -13,7 +13,7 @@ interface Props {
   };
 }
 
-export default async function OrdersPage({ searchParams }: Props) {
+export default async function UsersPage({ searchParams }: Props) {
   const page = searchParams.page ? parseInt(searchParams.page) : 1;
 
   const {
@@ -30,7 +30,7 @@ export default async function OrdersPage({ searchParams }: Props) {
 
   return (
     <>
-      <Title title="User Management" />
+      <Title title="Administración de usuarios" />
 
       <div className="mb-10">
         <UsersTable users={users} />
