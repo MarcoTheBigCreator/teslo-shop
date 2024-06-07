@@ -20,7 +20,7 @@ export const AdminItems = () => {
       </Link>
 
       <Link
-        href="/"
+        href="/admin/orders"
         className="flex items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all"
       >
         <IoTicketOutline size={30} />
