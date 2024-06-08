@@ -1,11 +1,33 @@
-import { titleFont } from '@/config/fonts';
+export const revalidate = 60;
 
-export default function Home() {
+import { getPaginatedProductsWithImages } from '@/actions';
+import { Pagination, ProductGrid, Title } from '@/components';
+import { redirect } from 'next/navigation';
+
+interface Props {
+  searchParams: {
+    page?: string;
+  };
+}
+
+export default async function Home({ searchParams }: Props) {
+  const page = searchParams.page ? parseInt(searchParams.page) : 1;
+
+  const { products, totalPages } = await getPaginatedProductsWithImages({
+    page,
+  });
+
+  if (products.length === 0) {
+    redirect('/');
+  }
+
   return (
-    <div className="">
-      <h1>Hola Mundo</h1>
-      <h1 className={`${titleFont.className} font-bold`}>Hola Mundo</h1>
-      <h1 className={`${titleFont.className}`}>Hola Mundo</h1>
+    <div className="px-5 sm:px-0">
+      <Title title="Tienda" subtitle="Todos los productos" className="mb-2" />
+
+      <ProductGrid products={products} />
+
+      <Pagination totalPages={totalPages} />
     </div>
   );
 }
