@@ -12,13 +12,23 @@ interface Props {
 export const ProductGridItem = ({ product }: Props) => {
   const [displayImage, setDisplayImage] = useState(product.images[0]);
 
+  // If the product has no images, return null
+  if (product.images.length === 0) {
+    return null;
+  }
+  const localsrc = displayImage
+    ? displayImage.startsWith('http')
+      ? displayImage
+      : `/products/${displayImage}`
+    : '/imgs/placeholder.jpg';
+
   return (
     <div className="rounded-md overflow-hidden fade-in">
       <Link href={`/product/${product.slug}`}>
         <Image
-          src={`/products/${displayImage}`}
+          src={localsrc}
           alt={product.title}
-          className="w-full object-cover rounded transition-all"
+          className="object-cover rounded transition-all w-[500px] h-[500px]"
           width={500}
           height={500}
           onMouseEnter={() => setDisplayImage(product.images[1])}

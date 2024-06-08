@@ -17,7 +17,9 @@ export * from './order/place-order';
 export * from './payment/set-transaction-id';
 export * from './payment/paypal-check-payment';
 
+export * from './product/create-update-product';
 export * from './product/get-product-by-slug';
+export * from './product/get-product-categories';
 export * from './product/get-stock-by-slug';
 export * from './product/product-pagination';
 

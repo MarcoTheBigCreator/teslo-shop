@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { useState } from 'react';
 
 import { Swiper as SwiperObject } from 'swiper';
@@ -14,6 +13,7 @@ import 'swiper/css/thumbs';
 
 import './slideshow.css';
 import React from 'react';
+import { ProductImage } from '@/components';
 
 interface Props {
   images: string[];
@@ -44,11 +44,12 @@ export const ProductSlideshow = ({ images, title, className }: Props) => {
       >
         {images.map((image) => (
           <SwiperSlide key={image}>
-            <Image
-              src={`/products/${image}`}
+            <ProductImage
+              src={image}
               width={1024}
               height={800}
               alt={title}
+              quality={100}
               className="rounded-lg object-fill pb-3"
             />
           </SwiperSlide>
@@ -65,8 +66,8 @@ export const ProductSlideshow = ({ images, title, className }: Props) => {
       >
         {images.map((image) => (
           <SwiperSlide key={image}>
-            <Image
-              src={`/products/${image}`}
+            <ProductImage
+              src={image}
               width={300}
               height={300}
               alt={title}

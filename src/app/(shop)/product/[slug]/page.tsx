@@ -8,7 +8,7 @@ import {
 } from '@/components';
 import { titleFont } from '@/config/fonts';
 import { Metadata, ResolvingMetadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { AddToCart } from './ui/AddToCart';
 
 interface Props {
@@ -47,6 +47,11 @@ export default async function ProductBySlug({ params }: Props) {
 
   if (!product) {
     notFound();
+  }
+
+  // redirect if product has no images
+  if (product.images.length === 0) {
+    redirect('/');
   }
 
   return (
