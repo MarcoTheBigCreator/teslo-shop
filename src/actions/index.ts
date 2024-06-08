@@ -18,6 +18,7 @@ export * from './payment/set-transaction-id';
 export * from './payment/paypal-check-payment';
 
 export * from './product/create-update-product';
+export * from './product/delete-product-image';
 export * from './product/get-product-by-slug';
 export * from './product/get-product-categories';
 export * from './product/get-stock-by-slug';
