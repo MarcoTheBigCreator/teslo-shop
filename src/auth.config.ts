@@ -2,7 +2,19 @@ import NextAuth, { type NextAuthConfig } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import prisma from './lib/prisma';
-import bycriptjs from 'bcryptjs';
+import bcryptjs from 'bcryptjs';
+
+const authenticatedRoutes = ['/checkout', '/profile', '/orders', '/admin'];
+const authenticatedAdminRoutes = ['/admin'];
+
+const isOnAuthenticatedRoutes = (
+  onRoute: string,
+  authenticatedRoutes: string[]
+) => {
+  return authenticatedRoutes.some((authRoutes) =>
+    onRoute.startsWith(authRoutes)
+  );
+};
 
 export const authConfig: NextAuthConfig = {
   pages: {
@@ -11,26 +23,38 @@ export const authConfig: NextAuthConfig = {
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
-      // console.log({ auth });
-      // const isLoggedIn = !!auth?.user;
-      // const isOnDashboard = nextUrl.pathname.startsWith('/dashboard');
-      // if (isOnDashboard) {
-      //   if (isLoggedIn) return true;
-      //   return false; // Redirect unauthenticated users to login page
-      // } else if (isLoggedIn) {
-      //   return Response.redirect(new URL('/dashboard', nextUrl));
-      // }
+      const isLoggedIn = !!auth?.user;
+      const userRole = auth?.user?.role;
+
+      // if (!userRole) return false; // No user role means unauthorized
+
+      if (
+        userRole === 'user' &&
+        isOnAuthenticatedRoutes(nextUrl.pathname, authenticatedRoutes)
+      ) {
+        return isLoggedIn;
+      }
+
+      if (
+        userRole === 'admin' &&
+        isOnAuthenticatedRoutes(nextUrl.pathname, authenticatedAdminRoutes)
+      ) {
+        return isLoggedIn;
+      }
+
       return true;
     },
+
     jwt({ token, user }) {
       if (user) {
         token.data = user;
       }
+
       return token;
     },
-    session({ session, token, user }) {
+    session({ session, token }) {
       session.user = token.data as any;
-      // console.log({ session, token, user });
+
       return session;
     },
   },
@@ -53,7 +77,7 @@ export const authConfig: NextAuthConfig = {
         if (!user) return null;
 
         // compare the password
-        if (!bycriptjs.compareSync(password, user.password)) {
+        if (!bcryptjs.compareSync(password, user.password)) {
           return null;
         }
 
