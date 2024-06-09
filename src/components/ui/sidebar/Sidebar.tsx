@@ -11,7 +11,6 @@ import {
   IoTicketOutline,
 } from 'react-icons/io5';
 import clsx from 'clsx';
-// import { logout } from '@/actions';
 import { signOut, useSession } from 'next-auth/react';
 import { AdminItems } from './AdminItems';
 
