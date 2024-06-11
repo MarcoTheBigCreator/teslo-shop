@@ -98,7 +98,7 @@ export default async function ProductsPage({ searchParams }: Props) {
                     {product.title}
                   </Link>
                 </td>
-                <td className="items-center text-sm text-gray-900 font-bold px-6 py-4 whitespace-nowrap">
+                <td className="items-center text-sm text-gray-900 font-bold">
                   {currencyFormat(product.price)}
                 </td>
                 <td className="items-center text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
