@@ -40,6 +40,9 @@ interface FormInputs {
 export const ProductForm = ({ product, categories }: Props) => {
   const router = useRouter();
   const [redirectPath, setRedirectPath] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isDeletingImage, setIsDeletingImage] = useState(false);
 
   const {
     handleSubmit,
@@ -68,6 +71,7 @@ export const ProductForm = ({ product, categories }: Props) => {
   };
 
   const onSubmit = async (data: FormInputs) => {
+    setIsSubmitting(true);
     const formData = new FormData();
 
     const { images, ...productToSave } = data;
@@ -100,6 +104,7 @@ export const ProductForm = ({ product, categories }: Props) => {
 
     toast.success('Producto actualizado');
     setRedirectPath(`/admin/product/${updatedProduct?.slug}`);
+    setIsSubmitting(false);
   };
 
   const showToast = (ok: boolean, message: string) => {
@@ -111,11 +116,13 @@ export const ProductForm = ({ product, categories }: Props) => {
   };
 
   const onDelete = async () => {
+    setIsDeleting(true);
     if (!product.id) return;
 
     const { ok, message } = await deleteProduct(product.id);
 
     if (!ok) {
+      setIsDeleting(false);
       toast.error(message);
       return;
     }
@@ -123,10 +130,12 @@ export const ProductForm = ({ product, categories }: Props) => {
     if (ok) {
       showToast(ok, 'Producto eliminado');
       setRedirectPath('/admin/products');
+      setIsDeleting(false);
     }
   };
 
   const onDeleteProductImage = async (imageId: number, imageUrl: string) => {
+    setIsDeletingImage(true);
     const { ok } = await deleteProductImage(imageId, imageUrl);
 
     showToast(ok, ok ? 'Imagen eliminada' : 'No se pudo eliminar la imagen');
@@ -134,6 +143,8 @@ export const ProductForm = ({ product, categories }: Props) => {
     if (ok) {
       router.refresh();
     }
+
+    setIsDeletingImage(false);
   };
 
   useEffect(() => {
@@ -223,8 +234,17 @@ export const ProductForm = ({ product, categories }: Props) => {
           </select>
         </div>
 
-        <Button type="submit" className="w-full">
-          Guardar
+        <Button
+          type="submit"
+          disabled={!isValid}
+          isLoading={isSubmitting}
+          className="w-full"
+        >
+          {isSubmitting
+            ? 'Guardando...'
+            : product.id
+            ? 'Actualizar Producto'
+            : 'Crear Producto'}
         </Button>
 
         {/* Delete product button */}
@@ -235,9 +255,10 @@ export const ProductForm = ({ product, categories }: Props) => {
           className={cn('w-full', {
             'cursor-not-allowed': !product.id,
           })}
-          disabled={!product.id}
+          disabled={!product.id || isDeleting}
+          isLoading={isDeleting}
         >
-          Eliminar Producto
+          {isDeleting ? 'Eliminando...' : 'Eliminar Producto'}
         </Button>
       </div>
 
@@ -256,7 +277,6 @@ export const ProductForm = ({ product, categories }: Props) => {
           <span>Tallas</span>
           <div className="flex flex-wrap">
             {sizes.map((size) => (
-              // bg-blue-500 text-white <--- si está seleccionado
               <div
                 key={size}
                 onClick={() => onSizeChanged(size)}
@@ -298,8 +318,10 @@ export const ProductForm = ({ product, categories }: Props) => {
                   onClick={() => onDeleteProductImage(image.id, image.url)}
                   variant="danger"
                   className="rounded-b-xl mt-0 rounded-t-none w-full"
+                  disabled={isDeletingImage}
+                  isLoading={isDeletingImage}
                 >
-                  Eliminar
+                  {isDeletingImage ? 'Eliminando...' : 'Eliminar Imagen'}
                 </Button>
               </div>
             ))}
