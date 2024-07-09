@@ -14,6 +14,7 @@ export * from './products/product-grid/ProductGridItem';
 
 export * from './providers/Providers';
 
+export * from './ui/button/Button';
 export * from './ui/footer/Footer';
 export * from './ui/not-found/PageNotFound';
 export * from './ui/pagination/Pagination';

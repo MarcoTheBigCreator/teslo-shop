@@ -2,12 +2,13 @@
 
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { SessionProvider } from 'next-auth/react';
+import { Toaster } from 'react-hot-toast';
 
 interface Props {
   children: React.ReactNode;
 }
 
-export const Providers = ({ children }: Props) => {
+export const PaypalProviders = ({ children }: Props) => {
   return (
     <PayPalScriptProvider
       options={{
@@ -18,5 +19,14 @@ export const Providers = ({ children }: Props) => {
     >
       <SessionProvider>{children}</SessionProvider>
     </PayPalScriptProvider>
+  );
+};
+
+export const ToasterProviders = ({ children }: Props) => {
+  return (
+    <>
+      <Toaster position="bottom-right" reverseOrder={false} />
+      {children}
+    </>
   );
 };

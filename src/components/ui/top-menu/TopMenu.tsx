@@ -4,7 +4,8 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { titleFont } from '@/config/fonts';
 import { useCartStore, useUIStore } from '@/store';
-import { IoSearchOutline, IoCartOutline } from 'react-icons/io5';
+import { IoCartOutline } from 'react-icons/io5';
+import { Button } from '@/components';
 
 export const TopMenu = () => {
   const openMenu = useUIStore((state) => state.openSideMenu);
@@ -30,31 +31,24 @@ export const TopMenu = () => {
 
       {/* Center Menu */}
       <div className="hidden sm:block">
-        <Link
-          className="m-2 p-2 rounded-md transition-all hover: bg-gray-100"
-          href={'/gender/men'}
-        >
-          Hombres
-        </Link>
-        <Link
-          className="m-2 p-2 rounded-md transition-all hover: bg-gray-100"
-          href={'/gender/women'}
-        >
-          Mujeres
-        </Link>
-        <Link
-          className="m-2 p-2 rounded-md transition-all hover: bg-gray-100"
-          href={'/gender/kid'}
-        >
-          Niños
-        </Link>
+        <Button className="p-2 m-2 font-normal" variant="ghost">
+          <Link href={'/gender/men'}>Hombres</Link>
+        </Button>
+
+        <Button className="p-2 m-2 font-normal" variant="ghost">
+          <Link href={'/gender/women'}>Mujeres</Link>
+        </Button>
+
+        <Button className="p-2 m-2 font-normal" variant="ghost">
+          <Link href={'/gender/kid'}>Niños</Link>
+        </Button>
       </div>
 
       {/* Search, Cart, Menu */}
       <div className="flex items-center">
-        <Link href={'/search'} className="mx-2">
+        {/* <Link href={'/search'} className="mx-2">
           <IoSearchOutline className="w-5 h-5" />
-        </Link>
+        </Link> */}
         <Link
           href={totalItemsInCart === 0 && loaded ? '/empty' : '/cart'}
           className="mx-2"

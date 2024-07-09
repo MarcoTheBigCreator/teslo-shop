@@ -2,7 +2,7 @@ export const revalidate = 0;
 
 // https://tailwindcomponents.com/component/hoverable-table
 import { getPaginatedProductsWithImages } from '@/actions';
-import { Pagination, ProductImage, Title } from '@/components';
+import { Button, Pagination, ProductImage, Title } from '@/components';
 import { currencyFormat } from '@/utils';
 
 import Link from 'next/link';
@@ -25,8 +25,8 @@ export default async function ProductsPage({ searchParams }: Props) {
       <Title title="Mantenimiento de productos" />
 
       <div className="flex justify-end mb-5">
-        <Link href="/admin/product/new" className="btn-primary">
-          Nuevo Producto
+        <Link href="/admin/product/new">
+          <Button>Nuevo Producto</Button>
         </Link>
       </div>
 
