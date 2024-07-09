@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { inter } from '@/config/fonts';
 import './globals.css';
-import { Providers } from '@/components';
+import { Analytics } from '@vercel/analytics/react';
+import { PaypalProviders, ToasterProviders } from '@/components';
 
 export const metadata: Metadata = {
   title: {
@@ -19,7 +20,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Providers>{children}</Providers>
+        <ToasterProviders>
+          <PaypalProviders>{children}</PaypalProviders>
+        </ToasterProviders>
+        <Analytics />
       </body>
     </html>
   );

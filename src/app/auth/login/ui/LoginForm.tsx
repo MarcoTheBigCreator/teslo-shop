@@ -5,8 +5,8 @@ import { useFormState, useFormStatus } from 'react-dom';
 import Link from 'next/link';
 import { authenticate } from '@/actions';
 import { IoInformationOutline } from 'react-icons/io5';
-import clsx from 'clsx';
 import { useSearchParams } from 'next/navigation';
+import { Button } from '@/components';
 
 export const LoginForm = () => {
   const [state, dispatch] = useFormState(authenticate, undefined);
@@ -70,12 +70,8 @@ function LoginButton() {
   const { pending } = useFormStatus();
 
   return (
-    <button
-      type="submit"
-      className={clsx({ 'btn-primary': !pending, 'btn-disabled': pending })}
-      disabled={pending}
-    >
-      Ingresar
-    </button>
+    <Button type="submit" disabled={pending} isLoading={pending}>
+      {!pending && 'Ingresar'}
+    </Button>
   );
 }

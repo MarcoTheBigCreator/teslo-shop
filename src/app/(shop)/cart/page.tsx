@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { Title } from '@/components';
+import { Button, Title } from '@/components';
 // import { redirect } from 'next/navigation';
 import { ProductsInCart } from './ui/ProductsInCart';
 import { OrderSummary } from './ui/OrderSummary';
@@ -34,12 +34,11 @@ export default function CartPage() {
             </div>
 
             <div className="mt-5 mb-2 w-full">
-              <Link
-                className="flex btn-primary justify-center"
-                href="/checkout/address"
-              >
-                Checkout
-              </Link>
+              <Button>
+                <Link className="flex justify-center" href="/checkout/address">
+                  Checkout
+                </Link>
+              </Button>
             </div>
           </div>
         </div>

@@ -3,9 +3,16 @@
 import { useForm } from 'react-hook-form';
 import { Product, ProductImage as ProductWithImage } from '@/interfaces';
 import clsx from 'clsx';
-import { createUpdateProduct, deleteProductImage } from '@/actions';
+import {
+  createUpdateProduct,
+  deleteProduct,
+  deleteProductImage,
+} from '@/actions';
 import { useRouter } from 'next/navigation';
-import { ProductImage } from '@/components';
+import { Button, ProductImage } from '@/components';
+import { cn } from '@/lib';
+import toast from 'react-hot-toast';
+import { useState, useEffect } from 'react';
 
 interface Props {
   product: Partial<Product> & { ProductImage?: ProductWithImage[] };
@@ -32,6 +39,7 @@ interface FormInputs {
 
 export const ProductForm = ({ product, categories }: Props) => {
   const router = useRouter();
+  const [redirectPath, setRedirectPath] = useState<string | null>(null);
 
   const {
     handleSubmit,
@@ -86,12 +94,53 @@ export const ProductForm = ({ product, categories }: Props) => {
     const { ok, product: updatedProduct } = await createUpdateProduct(formData);
 
     if (!ok) {
-      alert('No se pudo actualizar el producto');
+      toast.error('No se pudo actualizar el producto');
       return;
     }
 
-    router.replace(`/admin/product/${updatedProduct?.slug}`);
+    toast.success('Producto actualizado');
+    setRedirectPath(`/admin/product/${updatedProduct?.slug}`);
   };
+
+  const showToast = (ok: boolean, message: string) => {
+    if (!ok) {
+      toast.error(message);
+    } else {
+      toast.success(message);
+    }
+  };
+
+  const onDelete = async () => {
+    if (!product.id) return;
+
+    const { ok, message } = await deleteProduct(product.id);
+
+    if (!ok) {
+      toast.error(message);
+      return;
+    }
+
+    if (ok) {
+      showToast(ok, 'Producto eliminado');
+      setRedirectPath('/admin/products');
+    }
+  };
+
+  const onDeleteProductImage = async (imageId: number, imageUrl: string) => {
+    const { ok } = await deleteProductImage(imageId, imageUrl);
+
+    showToast(ok, ok ? 'Imagen eliminada' : 'No se pudo eliminar la imagen');
+
+    if (ok) {
+      router.refresh();
+    }
+  };
+
+  useEffect(() => {
+    if (redirectPath) {
+      router.push(redirectPath);
+    }
+  }, [redirectPath, router]);
 
   return (
     <form
@@ -174,9 +223,22 @@ export const ProductForm = ({ product, categories }: Props) => {
           </select>
         </div>
 
-        <button type="submit" className="btn-primary w-full">
+        <Button type="submit" className="w-full">
           Guardar
-        </button>
+        </Button>
+
+        {/* Delete product button */}
+        <Button
+          type="button"
+          onClick={onDelete}
+          variant="danger"
+          className={cn('w-full', {
+            'cursor-not-allowed': !product.id,
+          })}
+          disabled={!product.id}
+        >
+          Eliminar Producto
+        </Button>
       </div>
 
       {/* Selector de tallas y fotos */}
@@ -231,13 +293,14 @@ export const ProductForm = ({ product, categories }: Props) => {
                   height={300}
                   className="rounded-t-xl shadow-md object-cover w-full h-36"
                 />
-                <button
+                <Button
                   type="button"
-                  onClick={() => deleteProductImage(image.id, image.url)}
-                  className="btn-danger rounded-b-xl w-full"
+                  onClick={() => onDeleteProductImage(image.id, image.url)}
+                  variant="danger"
+                  className="rounded-b-xl mt-0 rounded-t-none w-full"
                 >
                   Eliminar
-                </button>
+                </Button>
               </div>
             ))}
           </div>

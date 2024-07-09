@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { QuantitySelector, SizeSelector } from '@/components';
+import { Button, QuantitySelector, SizeSelector } from '@/components';
 import { CartProduct, Product, Size } from '@/interfaces';
 import { useCartStore } from '@/store';
 
@@ -57,9 +57,9 @@ export const AddToCart = ({ product }: Props) => {
       <QuantitySelector quantity={quantity} onQuantitychanged={setQuantity} />
 
       {/* Button */}
-      <button onClick={addToCart} className="btn-primary my-5">
+      <Button onClick={addToCart} className="my-5">
         Agregar al carrito
-      </button>
+      </Button>
     </>
   );
 };

@@ -4,11 +4,11 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
-import clsx from 'clsx';
 
 import type { Address, Country } from '@/interfaces';
 import { useAddressStore } from '@/store';
 import { deleteUserAddress, setUserAddress } from '@/actions';
+import { Button } from '@/components';
 
 interface FormInputs {
   firstName: string;
@@ -183,16 +183,13 @@ export const AddressForm = ({ countries, userStoredAddress = {} }: Props) => {
           <span>¿Recordar Dirección?</span>
         </div>
 
-        <button
+        <Button
           type="submit"
           disabled={!isValid}
-          className={clsx('flex w-full sm:w-1/2 justify-center', {
-            'btn-primary': isValid,
-            'btn-disabled': !isValid,
-          })}
+          className="flex w-full sm:w-1/2 justify-center"
         >
           Siguiente
-        </button>
+        </Button>
       </div>
     </form>
   );

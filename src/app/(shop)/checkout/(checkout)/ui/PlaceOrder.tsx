@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import clsx from 'clsx';
 import { placeOrder } from '@/actions';
 import { useAddressStore, useCartStore } from '@/store';
 import { currencyFormat } from '@/utils';
+import { Button } from '@/components';
 
 export const PlaceOrder = () => {
   const router = useRouter();
@@ -94,15 +94,13 @@ export const PlaceOrder = () => {
       <div className="mt-6 w-full ">
         <p className="text-red-500 mb-2">{errorMessage}</p>
 
-        <button
+        <Button
           onClick={onPlaceOrder}
-          className={clsx('flex justify-center', {
-            'btn-primary': !isPlacingOrder,
-            'btn-disabled': isPlacingOrder,
-          })}
+          isLoading={isPlacingOrder}
+          className="flex justify-center"
         >
-          Colocar orden
-        </button>
+          {isPlacingOrder ? 'Procesando orden...' : 'Colocar orden'}
+        </Button>
         <p className="mt-5 text-center">
           {/* Disclaimer */}
           <span className="text-xs">
