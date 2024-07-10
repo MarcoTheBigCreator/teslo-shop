@@ -57,8 +57,13 @@ export const AddToCart = ({ product }: Props) => {
       <QuantitySelector quantity={quantity} onQuantitychanged={setQuantity} />
 
       {/* Button */}
-      <Button onClick={addToCart} className="my-5">
-        Agregar al carrito
+      <Button
+        onClick={addToCart}
+        disabled={posted || !size}
+        isLoading={posted}
+        className="my-5"
+      >
+        {posted ? 'Agregando...' : 'Agregar al carrito'}
       </Button>
     </>
   );
