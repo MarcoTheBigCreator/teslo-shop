@@ -327,7 +327,7 @@ export const ProductForm = ({ product, categories }: Props) => {
                     <img
                       src={src}
                       alt={`Preview ${idx + 1}`}
-                      className="object-fill"
+                      className="rounded-t-xl shadow-md object-cover w-full h-36"
                     />
                     <div className="rounded-b-xl mt-0 rounded-t-none w-full bg-blue-700 text-white py-2 px-4 text-center">
                       Preview
@@ -343,6 +343,7 @@ export const ProductForm = ({ product, categories }: Props) => {
                   src={image.url}
                   width={300}
                   height={300}
+                  className="rounded-t-xl shadow-md object-cover w-full h-36"
                 />
                 <Button
                   type="button"
