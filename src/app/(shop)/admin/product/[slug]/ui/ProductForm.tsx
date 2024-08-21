@@ -43,6 +43,7 @@ export const ProductForm = ({ product, categories }: Props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDeletingImage, setIsDeletingImage] = useState(false);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
   const {
     handleSubmit,
@@ -103,6 +104,7 @@ export const ProductForm = ({ product, categories }: Props) => {
     }
 
     toast.success('Producto actualizado');
+    setImagePreviews([]);
     setRedirectPath(`/admin/product/${updatedProduct?.slug}`);
     setIsSubmitting(false);
   };
@@ -147,6 +149,16 @@ export const ProductForm = ({ product, categories }: Props) => {
     setIsDeletingImage(false);
   };
 
+  const onImagesSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files) {
+      const previews = Array.from(files).map((file) =>
+        URL.createObjectURL(file)
+      );
+      setImagePreviews(previews);
+    }
+  };
+
   useEffect(() => {
     if (redirectPath) {
       router.push(redirectPath);
@@ -160,6 +172,7 @@ export const ProductForm = ({ product, categories }: Props) => {
     >
       {/* Textos */}
       <div className="w-full">
+        {/* Campos de texto */}
         <div className="flex flex-col mb-2">
           <span>Título</span>
           <input
@@ -272,7 +285,7 @@ export const ProductForm = ({ product, categories }: Props) => {
             {...register('inStock', { required: true, min: 0 })}
           />
         </div>
-        {/* As checkboxes */}
+        {/* Selector de tallas */}
         <div className="flex flex-col">
           <span>Tallas</span>
           <div className="flex flex-wrap">
@@ -292,18 +305,37 @@ export const ProductForm = ({ product, categories }: Props) => {
             ))}
           </div>
 
-          <div className="flex flex-col mb-2">
-            <span>Fotos</span>
+          {/* Imágenes */}
+          <div className="flex flex-col mt-3">
+            <span>Imágenes</span>
             <input
               type="file"
+              accept="image/*"
+              className="p-2 mt-2 border rounded-md bg-gray-200"
               {...register('images')}
               multiple
-              className="p-2 border rounded-md bg-gray-200"
-              accept="image/png, image/jpeg image/jpg image/avif"
+              onChange={onImagesSelected}
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {/* Vista previa de imágenes */}
+            {imagePreviews.length > 0 && (
+              <>
+                {imagePreviews.map((src, idx) => (
+                  <div key={idx}>
+                    <img
+                      src={src}
+                      alt={`Preview ${idx + 1}`}
+                      className="object-fill"
+                    />
+                    <div className="rounded-b-xl mt-0 rounded-t-none w-full bg-blue-700 text-white py-2 px-4 text-center">
+                      Preview
+                    </div>
+                  </div>
+                ))}
+              </>
+            )}
             {product.ProductImage?.map((image) => (
               <div key={image.id}>
                 <ProductImage
@@ -311,7 +343,6 @@ export const ProductForm = ({ product, categories }: Props) => {
                   src={image.url}
                   width={300}
                   height={300}
-                  className="rounded-t-xl shadow-md object-cover w-full h-36"
                 />
                 <Button
                   type="button"
@@ -319,7 +350,6 @@ export const ProductForm = ({ product, categories }: Props) => {
                   variant="danger"
                   className="rounded-b-xl mt-0 rounded-t-none w-full"
                   disabled={isDeletingImage}
-                  isLoading={isDeletingImage}
                 >
                   {isDeletingImage ? 'Eliminando...' : 'Eliminar Imagen'}
                 </Button>
