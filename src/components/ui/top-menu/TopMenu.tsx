@@ -1,7 +1,8 @@
 'use client';
 
+import { useHydrated } from '@/hooks/use-hydrated';
+
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import { titleFont } from '@/config/fonts';
 import { useCartStore, useUIStore } from '@/store';
 import { IoCartOutline } from 'react-icons/io5';
@@ -11,11 +12,8 @@ export const TopMenu = () => {
   const openMenu = useUIStore((state) => state.openSideMenu);
   const totalItemsInCart = useCartStore((state) => state.getTotalItems());
 
-  const [loaded, setLoaded] = useState(false);
+  const loaded = useHydrated();
 
-  useEffect(() => {
-    setLoaded(true);
-  }, []);
 
   return (
     <nav className="flex px-5 justify-between items-center w-full">

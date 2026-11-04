@@ -5,18 +5,19 @@ import { Pagination, ProductGrid, Title } from '@/components';
 import { redirect } from 'next/navigation';
 
 interface Props {
-  params: {
+  params: Promise<{
     gender: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     page?: string;
-  };
+  }>;
 }
 
 export default async function GenderByPage({ params, searchParams }: Props) {
-  const { gender } = params;
+  const query = await searchParams;
+  const { gender } = await params;
 
-  const page = searchParams.page ? parseInt(searchParams.page) : 1;
+  const page = query.page ? parseInt(query.page) : 1;
 
   const { products, totalPages } = await getPaginatedProductsWithImages({
     page,

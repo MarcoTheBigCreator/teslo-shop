@@ -19,7 +19,7 @@ export const getPaginatedOrdersAdmin = async ({
   try {
     const session = await auth();
 
-    if (session?.user.role !== 'admin') {
+    if (!session?.user?.id || session.user.role !== 'admin') {
       return { ok: false, message: 'Unauthorized' };
     }
 

@@ -19,12 +19,13 @@ export const getPaginatedUsersAdmin = async ({
   try {
     const session = await auth();
 
-    if (session?.user.role !== 'admin') {
+    if (!session?.user?.id || session.user.role !== 'admin') {
       return { ok: false, message: 'Unauthorized' };
     }
 
     // 1. Get users
     const users = await prisma.user.findMany({
+      select: { id: true, name: true, email: true, role: true },
       take: take,
       skip: (page - 1) * take,
       orderBy: {

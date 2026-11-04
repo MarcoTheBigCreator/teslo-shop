@@ -1,6 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useHydrated } from '@/hooks/use-hydrated';
+
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { placeOrder } from '@/actions';
 import { useAddressStore, useCartStore } from '@/store';
@@ -9,7 +11,7 @@ import { Button } from '@/components';
 
 export const PlaceOrder = () => {
   const router = useRouter();
-  const [loaded, setLoaded] = useState(false);
+  const loaded = useHydrated();
   const [errorMessage, setErrorMessage] = useState('');
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
@@ -22,9 +24,6 @@ export const PlaceOrder = () => {
   const cart = useCartStore((state) => state.cart);
   const clearCart = useCartStore((state) => state.clearCart);
 
-  useEffect(() => {
-    setLoaded(true);
-  }, []);
 
   const onPlaceOrder = async () => {
     setIsPlacingOrder(true);

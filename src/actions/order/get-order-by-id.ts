@@ -6,7 +6,7 @@ import prisma from '@/lib/prisma';
 export const getOrderById = async (id: string) => {
   const session = await auth();
 
-  if (!session) {
+  if (!session?.user?.id) {
     return {
       ok: false,
       message: 'No user session found. Please log in.',

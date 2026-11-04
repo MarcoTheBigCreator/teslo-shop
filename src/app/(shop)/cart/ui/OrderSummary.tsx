@@ -1,18 +1,16 @@
 'use client';
 
+import { useHydrated } from '@/hooks/use-hydrated';
+
 import { useCartStore } from '@/store';
 import { currencyFormat } from '@/utils';
-import { useEffect, useState } from 'react';
 
 export const OrderSummary = () => {
-  const [loaded, setLoaded] = useState(false);
+  const loaded = useHydrated();
   const { itemsInCart, subTotal, taxes, Total } = useCartStore((state) =>
     state.getSummaryInformation()
   );
 
-  useEffect(() => {
-    setLoaded(true);
-  }, []);
 
   if (!loaded) {
     return <p>Loading...</p>;

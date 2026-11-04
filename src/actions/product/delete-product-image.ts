@@ -1,11 +1,18 @@
 'use server';
 
+import { auth } from '@/auth.config';
+
 import { revalidatePath } from 'next/cache';
 import prisma from '@/lib/prisma';
 import { v2 as cloudinary } from 'cloudinary';
 cloudinary.config(process.env.CLOUDINARY_URL ?? '');
 
 export const deleteProductImage = async (imageId: number, imageUrl: string) => {
+  const session = await auth();
+  if (!session?.user?.id || session.user.role !== 'admin') {
+    return { ok: false, message: 'Unauthorized' };
+  }
+
   // VALIDATION WHEN LOCAL IMAGES ARE IMPLEMENTED
   if (!imageUrl.startsWith('http')) {
     return {

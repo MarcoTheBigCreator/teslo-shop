@@ -3,6 +3,7 @@
 import { auth } from '@/auth.config';
 import { Address, Size } from '@/interfaces';
 import prisma from '@/lib/prisma';
+import { orderItemsSchema } from '@/lib/order-validation';
 
 interface ProductToOrder {
   productId: string;
@@ -15,7 +16,7 @@ export const placeOrder = async (
   address: Address
 ) => {
   const session = await auth();
-  const userId = session?.user.id;
+  const userId = session?.user?.id;
 
   if (!userId) {
     return {
@@ -23,6 +24,10 @@ export const placeOrder = async (
       message: 'No user session found. Please log in.',
     };
   }
+
+  const parsedItems = orderItemsSchema.safeParse(productIds);
+  if (!parsedItems.success) return { ok: false, message: 'Invalid order items' };
+  productIds = parsedItems.data;
 
   // get the info of the products
   // note: we can order 2+ products with the same ID but different sizes
@@ -34,6 +39,13 @@ export const placeOrder = async (
       },
     },
   });
+
+  for (const item of productIds) {
+    const product = products.find((product) => product.id === item.productId);
+    if (!product || !product.sizes.includes(item.size)) {
+      return { ok: false, message: 'Invalid product or size' };
+    }
+  }
 
   const itemsInOrder = productIds.reduce((count, p) => count + p.quantity, 0);
 

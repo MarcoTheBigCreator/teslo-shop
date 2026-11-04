@@ -4,7 +4,7 @@ import { changeUserRole } from '@/actions';
 import { User } from '@/interfaces';
 
 interface Props {
-  users: User[];
+  users: Pick<User, 'id' | 'name' | 'email' | 'role'>[];
 }
 
 export const UsersTable = ({ users }: Props) => {
