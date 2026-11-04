@@ -1,9 +1,14 @@
 'use server';
 
+import { auth } from '@/auth.config';
+
 import { Address } from '@/interfaces';
 import prisma from '@/lib/prisma';
 
 export const setUserAddress = async (address: Address, userId: string) => {
+  const session = await auth();
+  if (!session?.user?.id || session.user.id !== userId) return { ok: false, message: 'Unauthorized' };
+
   try {
     const newAddress = await createOrReplaceAddress(address, userId);
 

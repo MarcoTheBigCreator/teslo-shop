@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState, useEffect } from 'react';
+import { getSafeRedirectPath } from '@/lib/auth-access';
+import { useFormStatus } from 'react-dom';
 import Link from 'next/link';
 import { authenticate } from '@/actions';
 import { IoInformationOutline } from 'react-icons/io5';
@@ -9,13 +10,15 @@ import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components';
 
 export const LoginForm = () => {
-  const [state, dispatch] = useFormState(authenticate, undefined);
+  const [state, dispatch] = useActionState(authenticate, undefined);
 
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('redirectTo') || '/';
+  const callbackUrl = searchParams.get('redirectTo') || searchParams.get('callbackUrl') || '/';
 
   useEffect(() => {
-    if (state === 'Success') window.location.replace(callbackUrl);
+    if (state === 'Success') {
+      window.location.replace(getSafeRedirectPath(callbackUrl, window.location.origin));
+    }
   }, [state, callbackUrl]);
 
   return (

@@ -1,11 +1,18 @@
 'use server';
 
+import { auth } from '@/auth.config';
+
 import { revalidatePath } from 'next/cache';
 import prisma from '@/lib/prisma';
 import { v2 as cloudinary } from 'cloudinary';
 cloudinary.config(process.env.CLOUDINARY_URL ?? '');
 
 export const deleteProduct = async (id: string) => {
+  const session = await auth();
+  if (!session?.user?.id || session.user.role !== 'admin') {
+    return { ok: false, message: 'Unauthorized' };
+  }
+
   const imageUrls = await prisma.productImage.findMany({
     where: {
       productId: id,

@@ -8,13 +8,14 @@ import { currencyFormat } from '@/utils';
 import Link from 'next/link';
 
 interface Props {
-  searchParams: {
+  searchParams: Promise<{
     page?: string;
-  };
+  }>;
 }
 
 export default async function ProductsPage({ searchParams }: Props) {
-  const page = searchParams.page ? parseInt(searchParams.page) : 1;
+  const query = await searchParams;
+  const page = query.page ? parseInt(query.page) : 1;
 
   const { totalPages, products } = await getPaginatedProductsWithImages({
     page,

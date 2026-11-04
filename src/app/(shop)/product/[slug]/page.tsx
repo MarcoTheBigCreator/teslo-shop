@@ -12,9 +12,9 @@ import { notFound, redirect } from 'next/navigation';
 import { AddToCart } from './ui/AddToCart';
 
 interface Props {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export async function generateMetadata(
@@ -22,7 +22,7 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   // read route params
-  const slug = params.slug;
+  const { slug } = await params;
 
   // fetch data
   const product = await getProductBySlug(slug);
@@ -42,7 +42,7 @@ export async function generateMetadata(
 }
 
 export default async function ProductBySlug({ params }: Props) {
-  const { slug } = params;
+  const { slug } = await params;
   const product = await getProductBySlug(slug);
 
   if (!product) {

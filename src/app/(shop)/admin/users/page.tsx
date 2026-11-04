@@ -8,13 +8,14 @@ import { redirect } from 'next/navigation';
 import { UsersTable } from './ui/UsersTable';
 
 interface Props {
-  searchParams: {
+  searchParams: Promise<{
     page?: string;
-  };
+  }>;
 }
 
 export default async function UsersPage({ searchParams }: Props) {
-  const page = searchParams.page ? parseInt(searchParams.page) : 1;
+  const query = await searchParams;
+  const page = query.page ? parseInt(query.page) : 1;
 
   const {
     ok,

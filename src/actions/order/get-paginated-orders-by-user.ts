@@ -19,7 +19,7 @@ export const getPaginatedOrdersByUser = async ({
   try {
     const session = await auth();
 
-    if (!session) {
+    if (!session?.user?.id) {
       return { ok: false, message: 'Unauthorized' };
     }
 

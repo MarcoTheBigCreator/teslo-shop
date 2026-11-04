@@ -1,8 +1,6 @@
-version: '3.8'
-
 services:
   postgres-db:
-    image: postgres:15.3
+    image: postgres:15.19
     restart: always
     environment:
       POSTGRES_USER: ${DB_USER}

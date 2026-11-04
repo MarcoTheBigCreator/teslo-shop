@@ -1,37 +1,25 @@
 'use server';
 
+import { auth } from '@/auth.config';
 import prisma from '@/lib/prisma';
+import { isPayPalOrderId } from '@/lib/payment-validation';
 
-export const setTransactionId = async (
-  orderId: string,
-  transactionId: string
-) => {
+export const setTransactionId = async (orderId: string, transactionId: string) => {
+  const session = await auth();
+  if (!session?.user?.id || !isPayPalOrderId(transactionId)) {
+    return { ok: false, message: 'Unauthorized or invalid transaction ID.' };
+  }
+
   try {
-    const order = await prisma.order.update({
-      where: {
-        id: orderId,
-      },
-      data: {
-        transactionId,
-      },
+    const result = await prisma.order.updateMany({
+      where: { id: orderId, userId: session.user.id, isPaid: false },
+      data: { transactionId },
     });
-
-    if (!order) {
-      return {
-        ok: false,
-        message: `Order ${orderId} not found.`,
-      };
+    if (result.count !== 1) {
+      return { ok: false, message: 'Order not found or already paid.' };
     }
-
-    return {
-      ok: true,
-    };
-  } catch (error) {
-    console.log(error);
-
-    return {
-      ok: false,
-      message: 'Error saving transaction ID.',
-    };
+    return { ok: true };
+  } catch {
+    return { ok: false, message: 'Error saving transaction ID.' };
   }
 };

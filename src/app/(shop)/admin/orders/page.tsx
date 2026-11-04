@@ -9,13 +9,14 @@ import { redirect } from 'next/navigation';
 import { IoCardOutline } from 'react-icons/io5';
 
 interface Props {
-  searchParams: {
+  searchParams: Promise<{
     page?: string;
-  };
+  }>;
 }
 
 export default async function OrdersPage({ searchParams }: Props) {
-  const page = searchParams.page ? parseInt(searchParams.page) : 1;
+  const query = await searchParams;
+  const page = query.page ? parseInt(query.page) : 1;
 
   const { ok, totalPages, orders } = await getPaginatedOrdersAdmin({
     page,

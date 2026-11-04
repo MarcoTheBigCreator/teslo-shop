@@ -1,21 +1,19 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useHydrated } from '@/hooks/use-hydrated';
+
 import { useCartStore } from '@/store';
 import { ProductImage, QuantitySelector } from '@/components';
 import Link from 'next/link';
 
 export const ProductsInCart = () => {
-  const [loaded, setLoaded] = useState(false);
+  const loaded = useHydrated();
   const productsInCart = useCartStore((state) => state.cart);
   const updateProductQuantity = useCartStore(
     (state) => state.updateProductQuantity
   );
   const removeProduct = useCartStore((state) => state.removeProduct);
 
-  useEffect(() => {
-    setLoaded(true);
-  }, []);
 
   if (!loaded) {
     return <p>Loading...</p>;

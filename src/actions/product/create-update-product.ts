@@ -1,5 +1,7 @@
 'use server';
 
+import { auth } from '@/auth.config';
+
 import prisma from '@/lib/prisma';
 import { Gender, Product, Size } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
@@ -27,6 +29,11 @@ const ProductSchema = z.object({
 });
 
 export const createUpdateProduct = async (formData: FormData) => {
+  const session = await auth();
+  if (!session?.user?.id || session.user.role !== 'admin') {
+    return { ok: false, message: 'Unauthorized' };
+  }
+
   const data = Object.fromEntries(formData);
   const parseProduct = ProductSchema.safeParse(data);
 

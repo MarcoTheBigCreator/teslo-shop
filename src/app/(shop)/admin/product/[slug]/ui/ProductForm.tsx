@@ -1,6 +1,7 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
+import Image from 'next/image';
 import { Product, ProductImage as ProductWithImage } from '@/interfaces';
 import clsx from 'clsx';
 import {
@@ -51,7 +52,7 @@ export const ProductForm = ({ product, categories }: Props) => {
     formState: { isValid },
     getValues,
     setValue,
-    watch,
+    control,
   } = useForm<FormInputs>({
     defaultValues: {
       ...product,
@@ -61,7 +62,7 @@ export const ProductForm = ({ product, categories }: Props) => {
     },
   });
 
-  watch('sizes');
+  const selectedSizes = useWatch({ control, name: 'sizes' });
 
   const onSizeChanged = (size: string) => {
     const sizes = new Set(getValues('sizes'));
@@ -296,7 +297,7 @@ export const ProductForm = ({ product, categories }: Props) => {
                 className={clsx(
                   'flex p-2 cursor-pointer transition-all items-center justify-center w-10 h-10 mr-2 border rounded-md',
                   {
-                    'bg-blue-500 text-white': getValues('sizes').includes(size),
+                    'bg-blue-500 text-white': selectedSizes.includes(size),
                   }
                 )}
               >
@@ -324,7 +325,10 @@ export const ProductForm = ({ product, categories }: Props) => {
               <>
                 {imagePreviews.map((src, idx) => (
                   <div key={idx}>
-                    <img
+                    <Image
+                      width={300}
+                      height={144}
+                      unoptimized
                       src={src}
                       alt={`Preview ${idx + 1}`}
                       className="rounded-t-xl shadow-md object-cover w-full h-36"

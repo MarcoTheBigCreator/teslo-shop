@@ -1,10 +1,23 @@
 'use server';
 
 import { PayPalOrderStatusResponse } from '@/interfaces';
+import { auth } from '@/auth.config';
+import { isPayPalOrderId, paymentMatchesOrder } from '@/lib/payment-validation';
 import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 
 export const paypalCheckPayment = async (paypalTransactionId: string) => {
+  const session = await auth();
+  if (!session?.user?.id || !isPayPalOrderId(paypalTransactionId)) {
+    return { ok: false, error: 'Unauthorized or invalid transaction ID' };
+  }
+  const order = await prisma.order.findFirst({
+    where: { transactionId: paypalTransactionId, userId: session.user.id },
+    select: { id: true, total: true, transactionId: true, isPaid: true },
+  });
+  if (!order) return { ok: false, error: 'Order not found' };
+  if (order.isPaid) return { ok: true };
+
   const authToken = await getPaypalBearerToken();
 
   if (!authToken) {
@@ -23,27 +36,27 @@ export const paypalCheckPayment = async (paypalTransactionId: string) => {
     };
   }
 
-  const { status, purchase_units } = resp;
-  const { invoice_id: orderId } = purchase_units[0]; //! INVOICE ID
-
-  if (status !== 'COMPLETED') {
-    return {
-      ok: false,
-      error: 'Payment not completed',
-    };
+  if (!paymentMatchesOrder(resp, order)) {
+    return { ok: false, error: 'Payment does not match the order' };
   }
+  const orderId = order.id;
 
   //! Save the update in the database
   try {
-    await prisma.order.update({
+    const updated = await prisma.order.updateMany({
       where: {
         id: orderId,
+        userId: session.user.id,
+        transactionId: paypalTransactionId,
+        isPaid: false,
       },
       data: {
         isPaid: true,
         paidAt: new Date(),
       },
     });
+
+    if (updated.count !== 1) return { ok: false, error: 'Order could not be updated' };
 
     //! Revalidate the path
     revalidatePath(`/orders/${orderId}`);
@@ -87,6 +100,7 @@ const getPaypalBearerToken = async (): Promise<string | null> => {
     const response = await fetch(OAUTH_URL, {
       ...requestOptions,
       cache: 'no-store',
+      signal: AbortSignal.timeout(15_000),
     }).then((r) => r.json());
 
     return response.access_token;
@@ -115,6 +129,7 @@ const verifyPayPalPayment = async (
     const resp = await fetch(PAYPAL_ORDER_URL, {
       ...requestOptions,
       cache: 'no-store',
+      signal: AbortSignal.timeout(15_000),
     }).then((r) => r.json());
 
     return resp;

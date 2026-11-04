@@ -4,17 +4,7 @@ import { z } from 'zod';
 import prisma from './lib/prisma';
 import bcryptjs from 'bcryptjs';
 
-const authenticatedRoutes = ['/checkout', '/profile', '/orders', '/admin'];
-const authenticatedAdminRoutes = ['/admin'];
-
-const isOnAuthenticatedRoutes = (
-  onRoute: string,
-  authenticatedRoutes: string[]
-) => {
-  return authenticatedRoutes.some((authRoutes) =>
-    onRoute.startsWith(authRoutes)
-  );
-};
+import { canAccessRoute } from './lib/auth-access';
 
 export const authConfig: NextAuthConfig = {
   pages: {
@@ -23,26 +13,10 @@ export const authConfig: NextAuthConfig = {
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user;
-      const userRole = auth?.user?.role;
-
-      // if (!userRole) return false; // No user role means unauthorized
-
-      if (
-        userRole === 'user' &&
-        isOnAuthenticatedRoutes(nextUrl.pathname, authenticatedRoutes)
-      ) {
-        return isLoggedIn;
-      }
-
-      if (
-        userRole === 'admin' &&
-        isOnAuthenticatedRoutes(nextUrl.pathname, authenticatedAdminRoutes)
-      ) {
-        return isLoggedIn;
-      }
-
-      return true;
+      if (canAccessRoute(nextUrl.pathname, auth?.user)) return true;
+      const signInUrl = new URL('/auth/login', nextUrl);
+      signInUrl.searchParams.set('redirectTo', nextUrl.pathname + nextUrl.search);
+      return Response.redirect(signInUrl, 307);
     },
 
     jwt({ token, user }) {
